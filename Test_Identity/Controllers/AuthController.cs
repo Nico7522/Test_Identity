@@ -37,25 +37,28 @@ namespace Test_Identity.Controllers
             {
                 return BadRequest();
             }
-            if (await _authService.Login(user))
+
+            ApplicationUser? userFound = await _authService.Login(user);
+            if (userFound is not null)
             {
-                string tokenString = _authService.GenerateToken(user);
+                string tokenString = await _authService.GenerateToken(userFound);
                 return Ok(tokenString);
             }
 
             return BadRequest();
         }
 
+        [HttpGet("GetRole")]
         public async Task<IActionResult> GetRole(string userId)
         {
            Claim? role = await _authService.GetRole(userId);
            return role is not null ? Ok(role) : BadRequest();
         }
 
-        public async Task<IActionResult> SetRole(string userId, string role)
+        [HttpPost("SetRole")]
+        public async Task<IActionResult> SetRole([FromBody] SetRoleUser userRole)
         {
-            bool isRoleAdded = await _authService.SetRole(userId, role);
-
+            bool isRoleAdded = await _authService.SetRole(userRole.UserId, userRole.Role);
             return isRoleAdded ? Ok() : BadRequest();
         }
 

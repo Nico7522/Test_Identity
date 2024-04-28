@@ -7,5 +7,7 @@ namespace Test_Identity.Models
         public bool IsActive { get; set; }
 
         public DateTime Birthdate { get; set; }
+
+        public string UserStatus { get; set; }
     }
 }

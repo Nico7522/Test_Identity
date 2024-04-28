@@ -9,10 +9,17 @@ namespace Test_Identity.Controllers
     public class TestController : ControllerBase
     {
 
-        [Authorize]
-        [HttpGet]
+        [Authorize(Policy = "OnlyAdmin")]
+        [HttpGet("TestOnlyAdmin")]
 
         public IActionResult Get()
+        {
+            return Ok("TEST");
+        }
+
+        [Authorize(Policy = "ConnectedUser")]
+        [HttpGet("TestConnectedUser")]
+        public IActionResult Test()
         {
             return Ok("TEST");
         }

@@ -49,6 +49,13 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("OnlyAdmin", policy => policy.RequireClaim("UserStatus", "Admin"));
+    options.AddPolicy("ConnectedUser", policy => policy.RequireClaim("UserStatus", "User"));
+
+});
+
 var app = builder.Build();
 
 
