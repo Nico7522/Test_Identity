@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -45,6 +46,7 @@ builder.Services.AddAuthentication(options =>
 });
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IJwtFactory, JwtFactory>();
+builder.Services.AddScoped<IAuthorizationHandler, FidelityPointHandler>();
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddControllers();
@@ -57,6 +59,11 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("OnlyAdmin", policy => policy.RequireClaim("UserStatus", "Admin"));
     options.AddPolicy("ConnectedUser", policy => policy.RequireClaim("UserStatus", "User"));
     options.AddPolicy("RoleManagement", policy => policy.RequireClaim("UserStatus", "SuperAdministrator"));
+    options.AddPolicy("AdminPolicy", policy => policy.RequireRole("User"));
+
+    // Personal requirement
+    options.AddPolicy("FidelityRequirement", policy => policy.Requirements.Add(new FidelityRequirement(100)));
+
 
 
 });

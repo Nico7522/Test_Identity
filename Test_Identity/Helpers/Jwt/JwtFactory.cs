@@ -40,7 +40,12 @@ namespace Test_Identity.Helpers.Jwt
             {
                 new Claim(ClaimTypes.Sid, user.Id),
                 new Claim(ClaimTypes.Email, user.UserName),
-                new Claim("UserStatus", "User")
+                // What the user is and can tell which pages it can access.
+                new Claim("UserStatus", "User"),
+                // Role serves only to restrict access to some pages.
+                new Claim(ClaimTypes.Role, "User"),
+                new Claim("FidelityPoint", "800")
+
             };
         }
     }
