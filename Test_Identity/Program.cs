@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Test_Identity.Context;
+using Test_Identity.Helpers.Jwt;
 using Test_Identity.Models;
 using Test_Identity.Services;
 
@@ -43,6 +44,8 @@ builder.Services.AddAuthentication(options =>
     };
 });
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IJwtFactory, JwtFactory>();
+
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -53,6 +56,8 @@ builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("OnlyAdmin", policy => policy.RequireClaim("UserStatus", "Admin"));
     options.AddPolicy("ConnectedUser", policy => policy.RequireClaim("UserStatus", "User"));
+    options.AddPolicy("RoleManagement", policy => policy.RequireClaim("UserStatus", "SuperAdministrator"));
+
 
 });
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using Test_Identity.Models;
@@ -31,30 +32,28 @@ namespace Test_Identity.Controllers
         [HttpPost("Login")]
         public async Task<IActionResult> Login(LoginUser user)
         {
-
-            var x = User;
             if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
 
-            ApplicationUser? userFound = await _authService.Login(user);
-            if (userFound is not null)
+            string token = await _authService.Login(user);
+            if (token is not null)
             {
-                string tokenString = await _authService.GenerateToken(userFound);
-                return Ok(tokenString);
+                return Ok(token);
             }
 
             return BadRequest();
         }
-
-        [HttpGet("GetRole")]
+        [Authorize(Policy = "RoleManagement")]
+        [HttpGet("GetRole/{userId}")]
         public async Task<IActionResult> GetRole(string userId)
         {
            Claim? role = await _authService.GetRole(userId);
            return role is not null ? Ok(role) : BadRequest();
         }
 
+        [Authorize(Policy = "RoleManagement")]
         [HttpPost("SetRole")]
         public async Task<IActionResult> SetRole([FromBody] SetRoleUser userRole)
         {

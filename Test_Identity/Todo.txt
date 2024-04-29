@@ -1,0 +1,4 @@
+1. Restructurer le projet. // OK
+2. Documenter le code.
+3. Ajouter un rôle dans les claims et bloquer une route avec un rôle.
+4. Ajouter une méthode perso pour les authorisations avec les claims.
